@@ -18,8 +18,10 @@ public class Driver {
 
     private static String loginModalXpath = "//section[@class=\"pc-sign-up-wrapper\"]";
     private static String loginXpath = "//div[@class=\"pc-header-login\"]";
+    private static String emailXpath = "//input[@type=\"text\"]";
+    private static String passwordXpath = "//input[@type=\"password\"]";
     private static String statusXpath = "//span[@class=\"cursor-pointer\"]";
-    private static String submitButton = "//button[@type=\"submit\"]";
+    private static String submitButtonXpath = "//button[@type=\"submit\"]";
     private static String projectCreateButtonXpath = "//div[@class=\"_912c5b13cf-card\"]";
     private static String projectCreationModalXpath = "//div[@class=\"flex justify-center gap-16 p-32\"]";
     private static String audioProjectCreationButton = "//div[@id=\"audio-project\"]";
@@ -49,23 +51,29 @@ public class Driver {
 
     public static void singIn() {
         isElementDisplayed(loginModalXpath, 5000);
-        WebElement email = searchXpathElement("//input[@type=\"text\"]");
+        WebElement email = searchXpathElement(emailXpath);
+        isElementClickable(emailXpath,1000);
         email.sendKeys("gevorg.arakelyan@podcastle.ai");
 
-        WebElement password = searchXpathElement("//input[@type=\"password\"]");
+        WebElement password = searchXpathElement(passwordXpath);
+        isElementClickable(passwordXpath,1000);
         password.sendKeys("Djvarpass157504$");
 
-        searchXpathElement(submitButton).click();
+        isElementClickable(submitButtonXpath,1000);
+        searchXpathElement(submitButtonXpath).click();
         System.out.println("Successfully login");
 
     }
 
     public static void createAudioProject() {
         isElementDisplayed(projectCreateButtonXpath, 8000);
+        isElementClickable(projectNameXpath, 1000);
+
         searchXpathElement(projectCreateButtonXpath).click();
 
         isElementDisplayed(projectCreationModalXpath, 3000);
         isElementDisplayed(audioProjectCreationButton, 3000);
+        isElementClickable(audioProjectCreationButton, 1000);
 
         searchXpathElement(audioProjectCreationButton).click();
         try {
@@ -115,14 +123,24 @@ public class Driver {
     private static void isElementDisplayed(String xpath, int duration) {
         try {
             Wait<WebDriver> wait = new WebDriverWait(Driver.driver, Duration.ofMillis(duration));
-            wait.until(d -> searchXpathElement(xpath)).isDisplayed();
-
+            wait.until(ExpectedConditions.visibilityOf(searchXpathElement(xpath)));
         } catch (Exception e) {
             System.out.printf("The element does not appeared with exception: %s", e);
             Driver.browserTurnDown();
         }
-
     }
+    private static void isElementClickable(String xpath, int duration){
+
+        try {
+            Wait<WebDriver> wait = new WebDriverWait(Driver.driver, Duration.ofMillis(duration));
+            wait.until(ExpectedConditions.elementToBeClickable(By.xpath(xpath)));
+
+        } catch (Exception e) {
+            System.out.printf("The element does not clickable: %s", e);
+            Driver.browserTurnDown();
+        }
+    }
+
 }
 
 
