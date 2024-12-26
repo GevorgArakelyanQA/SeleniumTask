@@ -22,12 +22,14 @@ public class Driver {
     private static String emailXpath = "//input[@placeholder=\"Email\"]";
     private static String passwordXpath = "//input[@placeholder=\"Password\"]";
     private static String statusXpath = "//span[@class=\"cursor-pointer\"]";
+    private static String saveTextXpath = "//span[@class=\"ml-8 typo-small text-surface-neutral-500\"]";
     private static String submitButtonXpath = "//button[@type=\"submit\"]";
     private static String projectCreateButtonXpath = "//div[@class=\"_912c5b13cf-card\"]";
     private static String projectCreationModalXpath = "//div[@class=\"flex justify-center gap-16 p-32\"]";
     private static String audioProjectCreationButton = "//div[@id=\"audio-project\"]";
     private static String projectNameXpath = "//span[@class=\"_fadbfcda65-inline-input-text typo-base-medium block h-20\"]";
     private static String projectsDivXpath = "//span[@class=\"_fadbfcda65-inline-input-text typo-base-medium block\"]";
+    private static String projectIconXpath = "//img[@alt=\"audio_icon\"]";
 
 
     private static WebElement searchXpathElement(String xpath) {
@@ -80,7 +82,7 @@ public class Driver {
 
         searchXpathElement(audioProjectCreationButton).click();
         try {
-            isElementDisplayed(projectCreateButtonXpath, 800);
+            isElementDisplayed(projectCreateButtonXpath, 4000);
             Actions action = new Actions(driver);
             action.sendKeys(Keys.ESCAPE);
             System.out.println("Project creation modal appeared, pressed Escape button");
@@ -89,16 +91,18 @@ public class Driver {
         }
     }
 
-    public static void projectSavingCheck() {
+    public static void validateProjectSaveStatus() {
         isElementDisplayed(statusXpath, 3000);
 
-        List<WebElement> saveStatusList = driver.findElements(By.xpath(statusXpath));
-        if (saveStatusList.size() == 1) {
-            System.out.println("Project saved");
-        } else {
-            System.out.printf("Project status is %s", saveStatusList.getLast());
+        try {
+            Wait<WebDriver> wait = new WebDriverWait(Driver.driver, Duration.ofMillis(4000));
+            wait.until(d -> searchXpathElement(saveTextXpath));
+            System.out.println("Project Saved!");
+        } catch (NoSuchElementException e) {
+            System.out.println("Project not saved");
         }
     }
+
 
     public static void getProjectName() {
         isElementDisplayed(projectNameXpath, 3000);
@@ -109,12 +113,13 @@ public class Driver {
         driver.navigate().to(projectsURL);
     }
 
-    public static void checkCreatedProject() {
+    public static void validateProjectCreation() {
         isElementDisplayed(projectsDivXpath, 5000);
 
         List<WebElement> projectsNameList = driver.findElements(By.xpath(projectsDivXpath));
         for (WebElement item : projectsNameList) {
-            if (item.getText().equals(projectName)) {
+            String projectIcon = searchXpathElement(projectIconXpath).getDomAttribute("alt");
+            if (item.getText().equals(projectName) && projectIcon.equals("audio_icon")) {
                 System.out.printf("New made project is presented with name: %s", projectName);
                 break;
             }
@@ -145,7 +150,4 @@ public class Driver {
             System.exit(0);
         }
     }
-
 }
-
-
