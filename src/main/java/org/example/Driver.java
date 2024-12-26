@@ -16,10 +16,11 @@ public class Driver {
     private static String baseURL = "https://qa.podcastle.ai/";
     private static String projectsURL = "https://qa.podcastle.ai/editor/workspace/projects";
 
-    private static String loginModalXpath = "//section[@class=\"pc-sign-up-wrapper\"]";
+
     private static String loginXpath = "//div[@class=\"pc-header-login\"]";
-    private static String emailXpath = "//input[@type=\"text\"]";
-    private static String passwordXpath = "//input[@type=\"password\"]";
+    private static String loginModalXpath = "//div[@class=\"pc-auth-content\"]";
+    private static String emailXpath = "//input[@placeholder=\"Email\"]";
+    private static String passwordXpath = "//input[@placeholder=\"Password\"]";
     private static String statusXpath = "//span[@class=\"cursor-pointer\"]";
     private static String submitButtonXpath = "//button[@type=\"submit\"]";
     private static String projectCreateButtonXpath = "//div[@class=\"_912c5b13cf-card\"]";
@@ -44,22 +45,24 @@ public class Driver {
     }
 
     public static void loginButtonClick() {
-        isElementDisplayed(loginXpath, 3000);
+        isElementDisplayed(loginXpath, 5000);
+        isElementClickable(loginXpath, 1000);
         searchXpathElement(loginXpath).click();
+        System.out.println("Clicked login button");
 
     }
 
     public static void singIn() {
-        isElementDisplayed(loginModalXpath, 5000);
+        isElementDisplayed(loginModalXpath, 8000);
         WebElement email = searchXpathElement(emailXpath);
-        isElementClickable(emailXpath,1000);
+        isElementClickable(emailXpath, 1000);
         email.sendKeys("gevorg.arakelyan@podcastle.ai");
 
         WebElement password = searchXpathElement(passwordXpath);
-        isElementClickable(passwordXpath,1000);
+        isElementClickable(passwordXpath, 1000);
         password.sendKeys("Djvarpass157504$");
 
-        isElementClickable(submitButtonXpath,1000);
+        isElementClickable(submitButtonXpath, 1000);
         searchXpathElement(submitButtonXpath).click();
         System.out.println("Successfully login");
 
@@ -67,7 +70,7 @@ public class Driver {
 
     public static void createAudioProject() {
         isElementDisplayed(projectCreateButtonXpath, 8000);
-        isElementClickable(projectNameXpath, 1000);
+        isElementClickable(projectCreateButtonXpath, 1000);
 
         searchXpathElement(projectCreateButtonXpath).click();
 
@@ -90,7 +93,6 @@ public class Driver {
         isElementDisplayed(statusXpath, 3000);
 
         List<WebElement> saveStatusList = driver.findElements(By.xpath(statusXpath));
-        System.out.println(saveStatusList.size());
         if (saveStatusList.size() == 1) {
             System.out.println("Project saved");
         } else {
@@ -123,21 +125,24 @@ public class Driver {
     private static void isElementDisplayed(String xpath, int duration) {
         try {
             Wait<WebDriver> wait = new WebDriverWait(Driver.driver, Duration.ofMillis(duration));
-            wait.until(ExpectedConditions.visibilityOf(searchXpathElement(xpath)));
+            wait.until(d -> searchXpathElement(xpath).isDisplayed());
         } catch (Exception e) {
-            System.out.printf("The element does not appeared with exception: %s", e);
+            System.out.printf("The element does not appeared with xpath: %s", xpath);
             Driver.browserTurnDown();
+            System.exit(0);
         }
     }
-    private static void isElementClickable(String xpath, int duration){
+
+    private static void isElementClickable(String xpath, int duration) {
 
         try {
             Wait<WebDriver> wait = new WebDriverWait(Driver.driver, Duration.ofMillis(duration));
             wait.until(ExpectedConditions.elementToBeClickable(By.xpath(xpath)));
 
         } catch (Exception e) {
-            System.out.printf("The element does not clickable: %s", e);
+            System.out.printf("The element does not clickable with xpath: %s", xpath);
             Driver.browserTurnDown();
+            System.exit(0);
         }
     }
 
