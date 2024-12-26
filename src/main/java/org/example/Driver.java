@@ -84,7 +84,7 @@ public class Driver {
         try {
             isElementDisplayed(projectCreateButtonXpath, 4000);
             Actions action = new Actions(driver);
-            action.sendKeys(Keys.ESCAPE);
+            action.sendKeys(Keys.ESCAPE).perform();
             System.out.println("Project creation modal appeared, pressed Escape button");
         } catch (NoSuchElementException e) {
             System.out.println("Project creation modal does not appeared");
