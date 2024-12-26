@@ -7,10 +7,10 @@ public class Main {
         Driver.loginButtonClick();
         Driver.singIn();
         Driver.createAudioProject();
-        Driver.projectSavingCheck();
+        Driver.validateProjectSaveStatus();
         Driver.getProjectName();
         Driver.projectsPageNavigation();
-        Driver.checkCreatedProject();
+        Driver.validateProjectCreation();
         Driver.browserTurnDown();
     }
 }
