@@ -120,7 +120,7 @@ public class Driver {
         for (WebElement item : projectsNameList) {
             String projectIcon = searchXpathElement(projectIconXpath).getDomAttribute("alt");
             if (item.getText().equals(projectName) && projectIcon.equals("audio_icon")) {
-                System.out.printf("New made project is presented with name: %s", projectName);
+                System.out.printf("New made audio project is presented with name: %s", projectName);
                 break;
             }
         }
